@@ -2,6 +2,17 @@
 #define SPONGE_LIBSPONGE_BYTE_STREAM_HH
 
 #include <string>
+#include <vector>
+
+/*
+    内存中可靠的字节流
+    字节在输入端写入，可以在输出端以同样的顺序读取。
+    字节流是有限的，写入器可以结束输入，当读取器读到末尾EOF时结束读取。
+    字节流也会进行流控制，对象初始化时有一个特定的容量，即内存可以存储的最大字节数
+    字节流将限制写入器在任何给定时刻写入的数量，确保不会超出存储容量
+    当读取器读取字节流时，写入器才被允许继续写入。
+    在写入器结束写入之前，字节流可以是任意长（边写边读）
+*/
 
 //! \brief An in-order byte stream.
 
@@ -17,12 +28,20 @@ class ByteStream {
     // that's a sign that you probably want to keep exploring
     // different approaches.
 
+    std::vector<uint8_t> _vec;
+    size_t _start = 0, _end = 0;
+    size_t _used_cap = 0;
+    size_t _capacity;
+    size_t _total_written = 0;
+    size_t _total_read = 0;
+    bool _end_input{};
     bool _error{};  //!< Flag indicating that the stream suffered an error.
 
   public:
     //! Construct a stream with room for `capacity` bytes.
     ByteStream(const size_t capacity);
 
+    ByteStream(std::vector<uint8_t> vec, const size_t capacity);
     //! \name "Input" interface for the writer
     //!@{
 
