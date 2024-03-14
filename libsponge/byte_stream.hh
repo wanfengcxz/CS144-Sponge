@@ -29,11 +29,11 @@ class ByteStream {
     // different approaches.
 
     std::vector<uint8_t> _vec;
-    size_t _start = 0, _end = 0;
-    size_t _used_cap = 0;
+    size_t _start{}, _end{};
+    size_t _used_cap{};
     size_t _capacity;
-    size_t _total_written = 0;
-    size_t _total_read = 0;
+    size_t _total_written{};
+    size_t _total_read{};
     bool _end_input{};
     bool _error{};  //!< Flag indicating that the stream suffered an error.
 

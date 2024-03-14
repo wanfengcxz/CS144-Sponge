@@ -5,21 +5,39 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 //! \brief A class that assembles a series of excerpts from a byte stream (possibly out of order,
 //! possibly overlapping) into an in-order byte stream.
 class StreamReassembler {
-  private:
+  public:
     // Your code here -- add private members as necessary.
 
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
+
+    size_t _first_unread{};
+    size_t _first_unassembled{};
+
+    size_t _start{};
+    size_t _len;
+    size_t _unassembled_len{};
+    std::vector<char> _unassembled;
+    std::vector<char> _flag;
+    size_t _str_len{};
+    std::string _str{};
+
+    bool _eof{};
+    size_t _end_unassembled{};
+    
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
     //! \note This capacity limits both the bytes that have been reassembled,
     //! and those that have not yet been reassembled.
     StreamReassembler(const size_t capacity);
+
+    StreamReassembler(const size_t capacity, std::vector<char> vec, std::vector<char> flag);
 
     //! \brief Receive a substring and write any newly contiguous bytes into the stream.
     //!
