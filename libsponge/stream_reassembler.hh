@@ -30,6 +30,15 @@ class StreamReassembler {
     bool _eof{};
     size_t _end_unassembled{};
     
+    inline void update_unassembled_after_read();
+
+    inline void update_unassembled_after_write();
+    
+    //! \brief Push a char into `_unassembled`, update `_flag` and `un_assembled_len`
+    inline void push(size_t idx, char ch);
+
+    //! \brief Pop a char at front and append it to the end of str, update `_flag` and `_len` 
+    inline void pop_front(std::string &str);
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
