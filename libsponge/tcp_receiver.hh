@@ -7,6 +7,7 @@
 #include "wrapping_integers.hh"
 
 #include <optional>
+#include <cassert>
 
 //! \brief The "receiver" part of a TCP implementation.
 
@@ -19,6 +20,11 @@ class TCPReceiver {
 
     //! The maximum number of bytes we'll store.
     size_t _capacity;
+
+    std::optional<WrappingInt32> _ackno{};
+    std::optional<WrappingInt32> _isn{};
+
+    void update_ackno();
 
   public:
     //! \brief Construct a TCP receiver
@@ -33,7 +39,7 @@ class TCPReceiver {
     //! \brief The ackno that should be sent to the peer
     //! \returns empty if no SYN has been received
     //!
-    //! This is the beginning of the receiver's window, or in other words, the sequence number
+    //! This is the beginnnig of the receiver's window, or in other words, the sequence number
     //! of the first byte in the stream that the receiver hasn't received.
     std::optional<WrappingInt32> ackno() const;
 
