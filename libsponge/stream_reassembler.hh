@@ -29,15 +29,15 @@ class StreamReassembler {
 
     bool _eof{};
     size_t _end_unassembled{};
-    
+
     inline void update_unassembled_after_read();
 
     inline void update_unassembled_after_write();
-    
+
     //! \brief Push a char into `_unassembled`, update `_flag` and `un_assembled_len`
     inline void push(size_t idx, char ch);
 
-    //! \brief Pop a char at front and append it to the end of str, update `_flag` and `_len` 
+    //! \brief Pop a char at front and append it to the end of str, update `_flag` and `_len`
     inline void pop_front(std::string &str);
 
   public:
@@ -74,13 +74,9 @@ class StreamReassembler {
     //! \returns `true` if no substrings are waiting to be assembled
     bool empty() const;
 
-    size_t first_unassembled() const {
-      return _first_unassembled;
-    }
+    size_t first_unassembled() const { return _first_unassembled; }
 
-    size_t unassembled_buffer_len() const {
-      return _len;
-    }
+    size_t unassembled_buffer_len() const { return _len; }
 };
 
 #endif  // SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH

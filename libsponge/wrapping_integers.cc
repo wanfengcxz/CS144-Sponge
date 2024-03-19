@@ -1,4 +1,5 @@
 #include "wrapping_integers.hh"
+
 #include <cmath>
 
 // Dummy implementation of a 32-bit wrapping integer
@@ -34,10 +35,11 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! has a different ISN.
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     uint64_t _2e32 = 1ul + UINT32_MAX;
-    uint64_t ret = isn.raw_value() <= n.raw_value()?n.raw_value()-isn.raw_value()
-        :_2e32 - isn.raw_value() + n.raw_value();
-    uint64_t diff = checkpoint>ret?checkpoint - ret:ret - checkpoint;
+    uint64_t ret =
+        isn.raw_value() <= n.raw_value() ? n.raw_value() - isn.raw_value() : _2e32 - isn.raw_value() + n.raw_value();
+    uint64_t diff = checkpoint > ret ? checkpoint - ret : ret - checkpoint;
     ret += (diff / _2e32) * _2e32;
-    if (checkpoint>ret && checkpoint-ret > _2e32 / 2) ret += _2e32;
+    if (checkpoint > ret && checkpoint - ret > _2e32 / 2)
+        ret += _2e32;
     return ret;
 }
