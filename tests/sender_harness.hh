@@ -392,12 +392,12 @@ class TCPSenderTestHarness {
     }
 
   public:
-    TCPSenderTestHarness(const std::string &name_, TCPConfig config)
+    TCPSenderTestHarness(const std::string &name_, TCPConfig config, bool fill_window = true)
         : outbound_segments()
         , sender(config.send_capacity, config.rt_timeout, config.fixed_isn)
         , steps_executed()
         , name(name_) {
-        sender.fill_window();
+        if (fill_window) sender.fill_window();
         collect_output();
         std::ostringstream ss;
         ss << "Initialized with ("

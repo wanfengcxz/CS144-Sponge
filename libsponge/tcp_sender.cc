@@ -45,12 +45,7 @@ void TCPSender::fill_window() {
     // testcase{send_extra.cc}: When filling window, treat a '0' window size as equal to '1' but don't back off RTO
     uint16_t window_size = std::max(static_cast<uint16_t>(1), _window_size);  // 如果window_size=0，需要设置为1
     while (_bytes_in_flight < window_size) {
-        size_t payload_size =
-            min(TCPConfig::MAX_PAYLOAD_SIZE,
-                min(_stream.buffer_size(),
-                    window_size - _bytes_in_flight));  // 要兼顾最大长度，当前还差的长度，stream中的最大长度
-                                                       // 初始化window_size=1，此处payload_size=0，不会携带任何数据
-
+        
         // 封装TCP数据包
         TCPSegment seg;
         if (!_send_syn_flag) {  // 如果没有发送过syn，则发送一次syn
@@ -59,6 +54,12 @@ void TCPSender::fill_window() {
             seg.header().syn = true;
             _send_syn_flag = true;
         }
+        
+        size_t payload_size =
+            min(TCPConfig::MAX_PAYLOAD_SIZE,
+                min(_stream.buffer_size(),
+                    window_size - _bytes_in_flight - seg.length_in_sequence_space()));  // 要兼顾最大长度，当前还差的长度，stream中的最大长度
+                                                       // 初始化window_size=1，此处payload_size=0，不会携带任何数据
 
         seg.payload() = Buffer(std::move(_stream.read(payload_size)));
         seg.header().seqno = wrap(_next_seqno, _isn);

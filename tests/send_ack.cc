@@ -36,6 +36,17 @@ int main() {
             WrappingInt32 isn(rd());
             cfg.fixed_isn = isn;
 
+            TCPSenderTestHarness test{"Repeat ACK is ignored", cfg, false};
+            test.execute(WriteBytes{"a"});
+            test.execute(ExpectSegment{}.with_no_flags().with_syn(true).with_payload_size(0).with_seqno(isn));
+            test.execute(ExpectNoSegment{});
+        }
+
+        {
+            TCPConfig cfg;
+            WrappingInt32 isn(rd());
+            cfg.fixed_isn = isn;
+
             TCPSenderTestHarness test{"Old ACK is ignored", cfg};
             test.execute(ExpectSegment{}.with_no_flags().with_syn(true).with_payload_size(0).with_seqno(isn));
             test.execute(ExpectNoSegment{});
