@@ -75,7 +75,6 @@ void TCPSender::fill_window() {
         }
 
         size_t send_len = seg.length_in_sequence_space();
-        // cerr << send_len << endl;
         if (send_len == 0)
             break;  // 空包 没有数据可以发送过去 防止死循环
 
@@ -87,14 +86,9 @@ void TCPSender::fill_window() {
             _timer.reset();
 
         _next_seqno += send_len;
-        // cerr << "send_len" << send_len << endl;
-        // cerr << "_next_seqno" << _next_seqno << endl;
         _bytes_in_flight += send_len;
         if (_stream.input_ended() && _stream.buffer_size() == 0)
             break;  // 数据全部发送完毕
-
-        // print("_bytes_in_flight", _bytes_in_flight);
-        // std::abort();
     }
 
     // cerr << _next_seqno << endl;
